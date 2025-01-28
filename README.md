@@ -1,5 +1,4 @@
-```markdown
-# GDELT Real-time Event Analysis API
+## GDELT Real-time Event Analysis API
 
 ---
 
@@ -103,23 +102,36 @@ GET /events
 **Response**:
 ```json
 {
-  "total": 1500,
-  "page": 2,
+  "page": 0,
   "results": [
     {
-      "GlobalEventID": "1234567890",
-      "Date": "20240315",
+      "GlobalEventID": "1223292259",
+      "Date": "20240129",
       "SourceActor": {
-        "Code": "GOV",
-        "Name": "US White House",
-        "CountryCode": "USA"
+        "Code": "CHN",
+        "Name": "CHINA",
+        "CountryCode": "CHN"
       },
-      "AvgTone": 2.5,
-      "Country": "United States"
-      // ... other fields
+      "TargetActor": {
+        "Code": "",
+        "Name": "",
+        "CountryCode": ""
+      },
+      "EventCode": "051",
+      "EventRootCode": "05",
+      "GoldsteinScale": 3.4,
+      "AvgTone": 6.31120783460283,
+      "NumMentions": 1,
+      "NumSources": 1,
+      "NumArticles": 1,
+      "SourceURL": "https://nowgrenada.com/2025/01/20th-anniversary-celebration-of-resumption-of-diplomatic-relations-coincides-with-chinese-new-year/",
+      "Lat": 29.8782,
+      "Lng": 121.549,
+      "Country": "China"
     }
   ]
 }
+```
 ```
 
 ---
