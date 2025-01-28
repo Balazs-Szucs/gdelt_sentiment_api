@@ -132,21 +132,6 @@ GET /events
   ]
 }
 ```
-```
-
----
-
-#### 2. Manual Refresh
-
-```
-POST /refresh
-```
-
-Forces an immediate data refresh from GDELT:
-
-```bash
-curl -X POST http://localhost:8080/refresh
-```
 
 ---
 
@@ -190,6 +175,10 @@ CREATE TABLE events (
 2. **Today's events**:
    ```bash
    curl "http://localhost:8080/events"
+    ```
+3. **Events in China with a Goldstein scale > 5**:
+   ```bash
+   curl "http://localhost:8080/gdelt/events?country=China&minGoldstein=5"
    ```
 
 **Note**: An active internet connection is required for GDELT data updates. Geographic resolution accuracy is dependent on the quality of the underlying GeoJSON data.
