@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/url"
 	"sentiment_dashboard_api/internal/models"
 	"strconv"
 )
@@ -51,6 +52,7 @@ func (s *Server) gdeltEventsHandler(w http.ResponseWriter, r *http.Request) {
 		"results": filtered[start:end],
 	})
 }
+
 func (s *Server) EventsHandler(w http.ResponseWriter, r *http.Request) {
 	rows, err := s.db.Query("SELECT * FROM events")
 	if err != nil {
@@ -87,6 +89,7 @@ func (s *Server) EventsHandler(w http.ResponseWriter, r *http.Request) {
 
 	s.respondJSON(w, events)
 }
+
 func (s *Server) gdeltRefreshHandler(w http.ResponseWriter, r *http.Request) {
 	go func() {
 		if err := s.gdeltService.Refresh(); err != nil {
@@ -96,8 +99,35 @@ func (s *Server) gdeltRefreshHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusAccepted)
 }
 
-func (s *Server) filterGdeltEvents(query map[string][]string) []models.Event {
-	return s.gdeltService.GetEvents()
+func (s *Server) filterGdeltEvents(query url.Values) []models.Event {
+	events := s.gdeltService.GetEvents()
+	var filtered []models.Event
+
+	for _, event := range events {
+		match := true
+
+		if date := query.Get("date"); date != "" && event.Date != date {
+			match = false
+		}
+		if sourceActor := query.Get("sourceActor"); sourceActor != "" && event.SourceActor.Code != sourceActor {
+			match = false
+		}
+		if targetActor := query.Get("targetActor"); targetActor != "" && event.TargetActor.Code != targetActor {
+			match = false
+		}
+		if eventCode := query.Get("eventCode"); eventCode != "" && event.EventCode != eventCode {
+			match = false
+		}
+		if country := query.Get("country"); country != "" && event.Country != country {
+			match = false
+		}
+
+		if match {
+			filtered = append(filtered, event)
+		}
+	}
+
+	return filtered
 }
 
 func (s *Server) corsMiddleware(next http.Handler) http.Handler {
