@@ -121,6 +121,9 @@ func (s *Server) filterGdeltEvents(query url.Values) []models.Event {
 		if country := query.Get("country"); country != "" && event.Country != country {
 			match = false
 		}
+		if goldstein, err := strconv.ParseFloat(query.Get("goldstein"), 64); err == nil && event.GoldsteinScale != goldstein {
+			match = false
+		}
 
 		if match {
 			filtered = append(filtered, event)
